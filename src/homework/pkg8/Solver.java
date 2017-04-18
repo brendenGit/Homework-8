@@ -11,7 +11,7 @@ import java.util.*;
  *
  * @author safar
  */
-public class Homework8 {
+public class Solver {
 
     /**
      * @param args the command line arguments
@@ -25,15 +25,28 @@ public class Homework8 {
             else
                 fileNames.add(s);
         }
-
+        
         Tray tray = new Tray(openFile(fileNames.pop()));
 
-        Tray solution = new Tray(openFile(fileNames.pop()));
-        // TODO code application logic here
+        Block solution = readSolution(openFile(fileNames.pop()));
+        
+        tray.print();
+        System.out.println();
+        solution.print();
     }
     
     public static void options(String arg){
-        System.out.println(arg);
+        System.out.println( "-option " + arg);
+    }
+    
+    public static Block readSolution(LinkedList<String> input){
+        Scanner in = new Scanner(input.pop()).useDelimiter("[^0-9]+");
+        int blockH = in.nextInt();
+        int blockW = in.nextInt();
+        int blockY = in.nextInt();
+        int blockX = in.nextInt();
+        
+        return new Block(blockH, blockW, blockY, blockX);
     }
     
     public static LinkedList<String> openFile(String fileName){

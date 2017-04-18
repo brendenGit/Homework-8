@@ -26,18 +26,21 @@ public class Tray {
     }
     
     private void buildTray(LinkedList<String> lines){
+        
         String firstLine = lines.pop();
+        Scanner in = new Scanner(firstLine).useDelimiter("[^0-9]+");
                 //reads in the dimensions of the board.
-                this.h = Integer.parseInt(firstLine.substring(0, 1));
-                this.w = Integer.parseInt(firstLine.substring(1, 2));
+                this.h = in.nextInt();
+                this.w = in.nextInt();
         for (String s: lines){
+            in = new Scanner(s).useDelimiter("[^0-9]+");
                 //For all other lines, record the values from the line into
                 //a block object.
-                int blockH = Integer.parseInt(s.substring(0, 1));
-                int blockW = Integer.parseInt(s.substring(1, 2));
-                int blockX = Integer.parseInt(s.substring(2, 3));
-                int blockY = Integer.parseInt(s.substring(3, 4));
-                placeBlock(new Block(blockH, blockW, blockX, blockY));
+                int blockH = in.nextInt();
+                int blockW = in.nextInt();
+                int blockY = in.nextInt();
+                int blockX = in.nextInt();
+                placeBlock(new Block(blockH, blockW, blockY, blockX));
         }
     }
     
@@ -47,8 +50,8 @@ public class Tray {
     
     public void placeBlock(Block newBlock){
         for (Block b: blocks){
-            if (b.overlap(newBlock))
-                return;
+            //if (b.overlap(newBlock))
+                //return;
         }
         blocks.add(newBlock);
     }
@@ -62,7 +65,9 @@ public class Tray {
         return false;
     }
     
-    
-    
-    
+    public void print(){
+        System.out.println(this.h + " " + this.w);
+        for (Block b: blocks)
+            b.print();
+    }
 }

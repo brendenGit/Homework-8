@@ -20,7 +20,7 @@ public class Block {
     //or if tray should store position.
     
     //Constructor. Takes in height, width, and initial position
-    public Block(int h, int w, int x, int y){
+    public Block(int h, int w, int y, int x){
         this.h = h;
         this.w = w;
         this.place(x, y);
@@ -47,6 +47,10 @@ public class Block {
                 return true;
         }
         return false;
+    }
+    
+    public void print(){
+        System.out.println(this.h + " " + this.w + " " + this.getY() + " " + this.getX());
     }
 
     @Override
