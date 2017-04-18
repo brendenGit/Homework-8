@@ -5,10 +5,6 @@
  */
 package homework.pkg8;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.*;
 
 /**
@@ -17,14 +13,23 @@ import java.util.*;
  */
 public class Tray {
     
-    private int h;
-    private int w;
-    LinkedList<Block> blocks = new LinkedList<>();
+    private int h; //Height
+    private int w; //Width
+    private LinkedList<Block> blocks = new LinkedList<>();
+    //List of all blocks on the tray.
 
     public Tray(LinkedList<String> lines){
         buildTray(lines);
     }
     
+    public Tray(Tray oldTray){
+        h = oldTray.h;
+        w = oldTray.w;
+        blocks = oldTray.getBlocks();
+    }
+    
+    //Reads through the given list of lines and converts
+    //into blocks and dimensions.
     private void buildTray(LinkedList<String> lines){
         
         String firstLine = lines.pop();
@@ -45,17 +50,35 @@ public class Tray {
     }
     
     public void move(int x, int y){
-        
+        //TODO logic to move a block on the board
     }
     
+    //Add a block to the board
     public void placeBlock(Block newBlock){
+        //Check if the block is outside the bounds of the board
+        if (newBlock.getX() + newBlock.w > this.w)
+            return;
+        if (newBlock.getY() + newBlock.h > this.h)
+            return;
+        
+        //Check if a block already occupies the space
         for (Block b: blocks){
-            //if (b.overlap(newBlock))
-                //return;
+            if (b.overlap(newBlock))
+                return;
         }
         blocks.add(newBlock);
     }
+    
+    public LinkedList<Block> getBlocks(){
+        return blocks;
+    }
+    
+    public void addBlocks(LinkedList<Block> toAdd){
+        for (Block b: toAdd)
+            placeBlock(toAdd.pop());
+    }
 
+    //Return if the board contains a particular block (solution)
     public boolean contains(Block newBlock){
         for (Block b: blocks){
             if (newBlock == b)
@@ -65,6 +88,7 @@ public class Tray {
         return false;
     }
     
+    //Outputs the contents of the board
     public void print(){
         System.out.println(this.h + " " + this.w);
         for (Block b: blocks)

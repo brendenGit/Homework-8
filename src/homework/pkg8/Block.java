@@ -11,10 +11,10 @@ package homework.pkg8;
  */
 public class Block {
     
-    final int h;
-    final int w;
-    private int x;
-    private int y;
+    final int h; //Height
+    final int w; //Width
+    private int x; //X pos, right/left
+    private int y; //Y pos, up/down
     //All variables for a block
     //Not sure if block should store position
     //or if tray should store position.
@@ -39,13 +39,19 @@ public class Block {
     
     public boolean overlap(Block newBlock){
         for (int i = newBlock.getX(); i < newBlock.getX() + newBlock.w; i++){
-            if (i > this.getX() && i < this.getX() + this.w)
-                return true;
+            if (i >= this.getX() && i < this.getX() + this.w - 1){
+                for (int j = newBlock.getY(); i < newBlock.getY() + newBlock.h; i++){
+                    if (j >= this.getY() && j < this.getY() + this.h - 1){
+                        System.out.println("Overlap:");
+                        this.print();
+                        newBlock.print();
+                        System.out.println("--------");
+                        return true;
+                    }
+                }
+            }
         }
-        for (int i = newBlock.getY(); i < newBlock.getY() + newBlock.h; i++){
-            if (i > this.getY() && i < this.getY() + this.h)
-                return true;
-        }
+        
         return false;
     }
     
