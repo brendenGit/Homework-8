@@ -13,6 +13,7 @@ public class Block {
     
     final int h; //Height
     final int w; //Width
+    private int k; //key
     private int x; //X pos, right/left
     private int y; //Y pos, up/down
     //All variables for a block
@@ -24,18 +25,26 @@ public class Block {
         this.h = h;
         this.w = w;
         this.place(x, y);
+        //k = 0;
+    }
+
+    public Block(int k, int h, int w, int y, int x){
+        this.h = h;
+        this.w = w;
+        this.place(x, y);
+        this.k = k;
     }
     
     //Change the position of the block
     public void place(int x, int y){
-        if (x >= 0)
-            this.x = x;
-        if (y >= 0)
-            this.y = y;
+        if (x >= 0) this.x = x;
+        if (y >= 0) this.y = y;
     }
     
     public int getX(){return this.x;}
     public int getY(){return this.y;}
+    public void setKey(int newKey){k = newKey;}
+    public int getKey(){return k;}
     
     public boolean overlap(Block newBlock){
         for (int i = newBlock.getX(); i < newBlock.getX() + newBlock.w; i++){

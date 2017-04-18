@@ -68,7 +68,6 @@ public class Solver {
             File file = new File(fileName);
             FileReader fileReader = new FileReader(file);
             BufferedReader bufferedReader = new BufferedReader(fileReader);
-            StringBuilder stringBuffer = new StringBuilder();
             String line;
             
             while ((line = bufferedReader.readLine()) != null) {

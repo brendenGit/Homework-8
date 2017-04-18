@@ -15,6 +15,7 @@ public class Tray {
     
     private int h; //Height
     private int w; //Width
+    private int currentKey;
     private LinkedList<Block> blocks = new LinkedList<>();
     //List of all blocks on the tray.
 
@@ -49,8 +50,16 @@ public class Tray {
         }
     }
     
-    public void move(int x, int y){
+    public void move(int key){
         //TODO logic to move a block on the board
+        Block toMove = null;
+        int i = 0;
+        while (i < blocks.size() && toMove == null){
+            if (blocks.get(i).getKey() == key){
+                toMove = blocks.remove(i);
+            }
+            i++;
+        }
     }
     
     //Add a block to the board
@@ -66,6 +75,7 @@ public class Tray {
             if (b.overlap(newBlock))
                 return;
         }
+        newBlock.setKey(currentKey++);
         blocks.add(newBlock);
     }
     
@@ -75,7 +85,7 @@ public class Tray {
     
     public void addBlocks(LinkedList<Block> toAdd){
         for (Block b: toAdd)
-            placeBlock(toAdd.pop());
+            placeBlock(b);
     }
 
     //Return if the board contains a particular block (solution)
