@@ -15,7 +15,7 @@ public class Solver {
 
     /**
      * @param args the command line arguments
-     * Run config: -ooption1 testFile.txt testFile2.txt
+     * Run config: -option1 testFile.txt testFile2.txt
      */
     public static void main(String[] args) {
         LinkedList<String> fileNames = new LinkedList<>();
@@ -29,9 +29,7 @@ public class Solver {
         }
         
         //If we don't have at least 2 files, exit
-        if (fileNames.size() < 2)
-            return;
-        
+        if (fileNames.size() < 2){System.out.println("Not enough file arguments found"); return;}
         
         Tray tray = new Tray(openFile(fileNames.pop()));
 
