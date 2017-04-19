@@ -52,7 +52,7 @@ public class Solver {
     //Takes in a string that holds 4 ints and creats a block
     //that represents the solution goal
     public static Block readSolution(LinkedList<String> input){
-        Scanner in = new Scanner(input.pop()).useDelimiter("[^0-9]+");
+        Scanner in = new Scanner(input.pop());
         int blockH = in.nextInt();
         int blockW = in.nextInt();
         int blockY = in.nextInt();
@@ -65,18 +65,15 @@ public class Solver {
     public static LinkedList<String> openFile(String fileName){
         LinkedList<String> outList = new LinkedList<>();
         try {
-            File file = new File(fileName);
-            FileReader fileReader = new FileReader(file);
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
-            String line;
+            Scanner scan = new Scanner(new File (fileName));
             
-            while ((line = bufferedReader.readLine()) != null) {
-                    outList.add(line);
+            while ((scan.hasNextInt())) {
+                    outList.add(scan.nextLine());
             }
-            fileReader.close();
-            } catch (IOException e) {
-                return null;
-            }
+        } catch (IOException e) {
+            System.out.println(e + "\nCould not open file: " + fileName);
+            return null;
+        }
         return outList;
     }
 }

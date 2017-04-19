@@ -34,12 +34,12 @@ public class Tray {
     private void buildTray(LinkedList<String> lines){
         
         String firstLine = lines.pop();
-        Scanner in = new Scanner(firstLine).useDelimiter("[^0-9]+");
+        Scanner in = new Scanner(firstLine);
                 //reads in the dimensions of the board.
                 this.h = in.nextInt();
                 this.w = in.nextInt();
         for (String s: lines){
-            in = new Scanner(s).useDelimiter("[^0-9]+");
+            in = new Scanner(s);
                 //For all other lines, record the values from the line into
                 //a block object.
                 int blockH = in.nextInt();
