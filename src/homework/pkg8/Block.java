@@ -14,8 +14,7 @@ public class Block {
     final int h; //Height
     final int w; //Width
     private int k; //key
-    private int x; //X pos, right/left
-    private int y; //Y pos, up/down
+    private Coordinates c; //Block position
     //All variables for a block
     //Not sure if block should store position
     //or if tray should store position.
@@ -24,25 +23,20 @@ public class Block {
     public Block(int h, int w, int y, int x){
         this.h = h;
         this.w = w;
+        c = new Coordinates();
         this.place(x, y);
         //k = 0;
-    }
-
-    public Block(int k, int h, int w, int y, int x){
-        this.h = h;
-        this.w = w;
-        this.place(x, y);
-        this.k = k;
     }
     
     //Change the position of the block
     public void place(int x, int y){
-        if (x >= 0) this.x = x;
-        if (y >= 0) this.y = y;
+        if (x >= 0) this.c.x = x;
+        if (y >= 0) this.c.y = y;
     }
     
-    public int getX(){return this.x;}
-    public int getY(){return this.y;}
+    public int getX(){return this.c.x;}
+    public int getY(){return this.c.y;}
+    public Coordinates getCoordinates(){return this.c;}
     public void setKey(int newKey){k = newKey;}
     public int getKey(){return k;}
     
@@ -86,10 +80,7 @@ public class Block {
         if (this.w != other.w) {
             return false;
         }
-        if (this.x != other.x) {
-            return false;
-        }
-        if (this.y != other.y) {
+        if (this.c != other.c) {
             return false;
         }
         return true;

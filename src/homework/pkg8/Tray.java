@@ -50,6 +50,31 @@ public class Tray {
         }
     }
     
+    public LinkedList<Move> getMoves(){
+        LinkedList<Move> returnMoves = new LinkedList<>();
+        for (Block b: blocks){
+            Block tempBlock = b;
+            
+            tempBlock.place(tempBlock.getX(), tempBlock.getY() + 1);
+            if (!this.blockCollision(tempBlock))
+                returnMoves.add(new Move(b, tempBlock.getCoordinates()));
+            
+            tempBlock.place(tempBlock.getX(), tempBlock.getY() - 1);
+            if (!this.blockCollision(tempBlock))
+                returnMoves.add(new Move(b, tempBlock.getCoordinates()));
+            
+            tempBlock.place(tempBlock.getX() + 1, tempBlock.getY());
+            if (!this.blockCollision(tempBlock))
+                returnMoves.add(new Move(b, tempBlock.getCoordinates()));
+            
+            tempBlock.place(tempBlock.getX() - 1, tempBlock.getY());
+            if (!this.blockCollision(tempBlock))
+                returnMoves.add(new Move(b, tempBlock.getCoordinates()));
+        }
+        
+        return returnMoves;
+    }
+    
     public void move(int key){
         //TODO logic to move a block on the board
         Block toMove = null;
@@ -64,19 +89,27 @@ public class Tray {
     
     //Add a block to the board
     public void placeBlock(Block newBlock){
+        if (this.blockCollision(newBlock))
+            return;
+        
+        newBlock.setKey(currentKey++);
+        blocks.add(newBlock);
+    }
+    
+    public boolean blockCollision(Block newBlock){
         //Check if the block is outside the bounds of the board
         if (newBlock.getX() + newBlock.w > this.w)
-            return;
+            return true;
         if (newBlock.getY() + newBlock.h > this.h)
-            return;
+            return true;
         
         //Check if a block already occupies the space
         for (Block b: blocks){
             if (b.overlap(newBlock))
-                return;
+                return true;
         }
-        newBlock.setKey(currentKey++);
-        blocks.add(newBlock);
+        
+        return false;
     }
     
     public LinkedList<Block> getBlocks(){
