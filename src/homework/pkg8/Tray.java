@@ -50,6 +50,9 @@ public class Tray {
         }
     }
     
+    public int getH(){return this.h;}
+    public int getW(){return this.w;}
+    
     public LinkedList<Move> getMoves(){
         LinkedList<Move> returnMoves = new LinkedList<>();
         for (Block b: blocks){
