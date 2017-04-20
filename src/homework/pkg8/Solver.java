@@ -30,7 +30,7 @@ public class Solver {
         
         //If we don't have at least 2 files, exit
         if (fileNames.size() < 2){System.out.println("Not enough file arguments found"); return;}
-        Coordinates c = new Coordinates();
+        
         Tray tray = new Tray(openFile(fileNames.pop()));
 
         LinkedList<String> solutionLines = openFile(fileNames.pop());

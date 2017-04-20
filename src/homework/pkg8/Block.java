@@ -18,6 +18,7 @@ public class Block {
     //All variables for a block
     //Not sure if block should store position
     //or if tray should store position.
+    //Also don't know if keys are necessary.
     
     //Constructor. Takes in height, width, and initial position
     public Block(int h, int w, int y, int x){
@@ -28,10 +29,23 @@ public class Block {
         //k = 0;
     }
     
+    public Block(Block newBlock){
+        this.h = newBlock.h;
+        this.w = newBlock.w;
+        c = newBlock.getCoordinates();
+        //this.k = newBlock.k;
+    }
+    
     //Change the position of the block
     public void place(int x, int y){
         if (x >= 0) this.c.x = x;
         if (y >= 0) this.c.y = y;
+    }
+    
+    public void place(Coordinates c){
+        if (c.x < 0 || c.y < 0)
+            return;
+        this.c = c;
     }
     
     public int getX(){return this.c.x;}

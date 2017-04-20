@@ -99,6 +99,18 @@ public class Tray {
         blocks.add(newBlock);
     }
     
+    public Block removeBlock(Block newBlock){
+        blocks.remove(newBlock);
+        return newBlock;
+    }
+    
+    public Block removeBlock(int key){
+        for (int i = 0; i < blocks.size(); i++)
+            if (blocks.get(i).getKey() == key)
+                return blocks.remove(i);
+        return null;
+    }
+    
     public boolean blockCollision(Block newBlock){
         //Check if the block is outside the bounds of the board
         if (newBlock.getX() + newBlock.w > this.w)
@@ -126,12 +138,7 @@ public class Tray {
 
     //Return if the board contains a particular block (solution)
     public boolean contains(Block newBlock){
-        for (Block b: blocks){
-            if (newBlock == b)
-                return true;
-        }
-        
-        return false;
+        return blocks.contains(newBlock);
     }
     
     //Outputs the contents of the board
