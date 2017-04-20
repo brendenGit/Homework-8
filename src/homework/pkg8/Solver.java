@@ -33,30 +33,20 @@ public class Solver {
         Coordinates c = new Coordinates();
         Tray tray = new Tray(openFile(fileNames.pop()));
 
-        Block solution = readSolution(openFile(fileNames.pop()));
+        LinkedList<String> solutionLines = openFile(fileNames.pop());
+        solutionLines.addFirst(tray.getH() + " " + tray.getW());
+        Tray goal = new Tray(solutionLines);
         
         System.out.println("Tray");
         tray.print(); //Debug output tray and solution goal
-        System.out.println("\nSolution");
-        solution.print();
+        System.out.println("\nGoal Configuration");
+        goal.print();
     }
     
     public static void options(String arg){
         //Debug print out inputted options.
         //TODO add logic for outputting options.
         System.out.println( "-option " + arg);
-    }
-    
-    //Takes in a string that holds 4 ints and creats a block
-    //that represents the solution goal
-    public static Block readSolution(LinkedList<String> input){
-        Scanner in = new Scanner(input.pop());
-        int blockH = in.nextInt();
-        int blockW = in.nextInt();
-        int blockY = in.nextInt();
-        int blockX = in.nextInt();
-        
-        return new Block(blockH, blockW, blockY, blockX);
     }
     
     //Opens a file and returns the contents as a linked list.
