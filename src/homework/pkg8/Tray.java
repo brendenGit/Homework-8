@@ -15,7 +15,7 @@ public class Tray {
     
     private int h; //Height
     private int w; //Width
-    private int currentKey;
+    private int currentKey = 0;
     private LinkedList<Block> blocks = new LinkedList<>();
     //List of all blocks on the tray.
 
