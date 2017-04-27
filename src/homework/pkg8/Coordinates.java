@@ -18,9 +18,22 @@ public class Coordinates {
         this.y = y;
     }
     
+        public Coordinates(Coordinates c){
+        this.x = c.x;
+        this.y = c.y;
+    }
+    
     public Coordinates(){
         this.x = 0;
         this.y = 0;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 53 * hash + this.x;
+        hash = 53 * hash + this.y;
+        return hash;
     }
 
     @Override
@@ -42,6 +55,10 @@ public class Coordinates {
             return false;
         }
         return true;
+    }
+    
+    public String print(){
+        return this.y + " " + this.x;
     }
     
 }

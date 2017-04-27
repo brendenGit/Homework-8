@@ -5,6 +5,8 @@
  */
 package homework.pkg8;
 
+import java.util.Objects;
+
 /**
  *
  * @author Tyler
@@ -32,7 +34,7 @@ public class Block {
     public Block(Block newBlock){
         this.h = newBlock.h;
         this.w = newBlock.w;
-        c = newBlock.getCoordinates();
+        c = new Coordinates(newBlock.getCoordinates());
         //this.k = newBlock.k;
     }
     
@@ -45,7 +47,7 @@ public class Block {
     public void place(Coordinates c){
         if (c.x < 0 || c.y < 0)
             return;
-        this.c = c;
+        this.c = new Coordinates(c);
     }
     
     public int getX(){return this.c.x;}
@@ -55,25 +57,35 @@ public class Block {
     public int getKey(){return k;}
     
     public boolean overlap(Block newBlock){
-        for (int i = newBlock.getX(); i < newBlock.getX() + newBlock.w; i++){
-            if (i >= this.getX() && i < this.getX() + this.w - 1){
-                for (int j = newBlock.getY(); i < newBlock.getY() + newBlock.h; i++){
-                    if (j >= this.getY() && j < this.getY() + this.h - 1){
-                        System.out.println("Overlap:");
-                        this.print();
-                        newBlock.print();
-                        System.out.println("--------");
-                        return true;
-                    }
-                }
+        for (int i = newBlock.getX(); i < (newBlock.getX() + newBlock.w); i++){
+            for (int j = newBlock.getY(); j < (newBlock.getY() + newBlock.h); j++){
+                if (this.contains(new Coordinates(i, j)))
+                    return true;
             }
         }
         
         return false;
     }
     
-    public void print(){
-        System.out.println(this.h + " " + this.w + " " + this.getY() + " " + this.getX());
+    public boolean contains(Coordinates newC){
+        if ((newC.x >= this.getX()) && (newC.x <= this.getX() + this.w - 1))
+            if ((newC.y >= this.getY()) && (newC.y <= this.getY() + this.h - 1))
+                return true;
+        
+        return false;
+    }
+    
+    public String print(){
+        return this.h + " " + this.w + " " + this.getY() + " " + this.getX();
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 67 * hash + this.h;
+        hash = 67 * hash + this.w;
+        hash = 67 * hash + Objects.hashCode(this.c);
+        return hash;
     }
 
     @Override
@@ -94,9 +106,12 @@ public class Block {
         if (this.w != other.w) {
             return false;
         }
-        if (this.c != other.c) {
+        if (!Objects.equals(this.c, other.c)) {
             return false;
         }
         return true;
     }
+    
+    
+    
 }
