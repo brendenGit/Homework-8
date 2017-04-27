@@ -8,8 +8,9 @@ import java.io.*;
 import java.util.*;
 
 /**
- *
- * @author safar
+ * Homework 8
+ * Authors: Tyler Allen, Brenden Arias
+ * Solver.java
  */
 public class Solver {
 
@@ -43,88 +44,50 @@ public class Solver {
         goal.print();
         System.out.println("---------------------\n");
         
-//        Block block1 = tray.removeBlock(0);
-//        block1.print();
-//        Block block2 = goal.removeBlock(0);
-//        block2.print();
-//        
-//        System.out.println(block1.getCoordinates().equals(block2.getCoordinates()));
-//        System.out.println(block1.equals(block2));
-        
         Move solutionMoves = solve(tray, goal);
         if (solutionMoves != null){
             System.out.println(solutionMoves.print());
             System.out.println("Number of Moves: " + solutionMoves.size());
         }
-//        LinkedList<Move> moves = tray.getMoves();
-//        for (Move m: moves){
-//            System.out.println(m.print());
-//        }
-        
-        //Block testBlock = new Block(1, 1, 139, 139);
-        //System.out.println(tray.blockCollision(testBlock));
         
     }
     
     public static Move solve(Tray tray, Tray goal){
-        boolean found = false;
         
-        LinkedList<Tray> trays = new LinkedList<>();
-        LinkedList<Tray> prevTrays = new LinkedList<>();
-        LinkedList<Move> newMoves;
+        LinkedList<Move> moves = new LinkedList<>(); //List of all possible moves
+        LinkedList<Tray> prevTrays = new LinkedList<>(); //List of attempted trays
+
         Tray tempTray;
         
-        trays.add(tray);
+        //Initialize the move list with the initial moves
+        moves.addAll(tray.getMoves());
         
-        //Replace with list of moves, in tray, recurslively apply previous moves
-        while (!found && !trays.isEmpty()){
-            tempTray = trays.pop();
-            prevTrays.add(new Tray(tempTray));
-            if (tempTray.contains(goal.getBlocks()))
-                return tempTray.prevMoves();
-            else{
-                newMoves = tempTray.getMoves();
-                for (Move m: newMoves){
-                    Tray tempTray2 = new Tray(tempTray);
-                    tempTray2.move(m);
-                    //if (!trays.contains(tempTray2) && !prevTrays.contains(tempTray2))
-                        trays.add(new Tray(tempTray2));
-                }  
+        while (!moves.isEmpty()){
+            tempTray = new Tray(tray); //Make a copy of the base tray
+            tempTray.addMove(moves.pop()); //Move the tray with one of the possible moves
+            if (!checkContains(prevTrays, tempTray)){ //If we've already tried this tray, ignore it
+                if (tempTray.contains(goal.getBlocks())) //If it's the solution, return the move
+                    return tempTray.prevMoves();
+                else{
+                    prevTrays.add(new Tray(tempTray)); //Otherwise, add this to the attempt list
+                    moves.addAll(tempTray.getMoves()); //And add it's moves to the stack
+                }
             }
         }
         
         //System.exit(1);
+        System.out.println("No solution Found");
         return null;
     }
     
-//        public static Move solve(Tray tray, Tray goal){
-//        boolean found = false;
-//        
-//        if (tray.contains(goal.getBlocks()))
-//            return new Move();
-//        
-//        LinkedList<Move> moves = tray.getMoves();
-//        LinkedList<Move> newMoves;
-//        Tray tempTray;
-//        Move currentMove;
-//        
-//        while (!found && !moves.isEmpty()){
-//            tempTray = tray;
-//            currentMove = moves.pop();
-//            tempTray.move(currentMove);
-//            if (tempTray.contains(goal.getBlocks()))
-//                return currentMove;
-//            else{
-//                newMoves = tempTray.getMoves();
-//                for (Move m: newMoves)
-//                    m.prevMove = currentMove;
-//                moves.addAll(newMoves);
-//            }
-//        }
-//        
-//        System.exit(1);
-//        return null;
-//    }
+    public static boolean checkContains(LinkedList<Tray> trays, Tray tray){
+        for (Tray t: trays) //Check if tray is contained in list
+            if (tray.equals(t))
+                return true;
+        
+        return false;
+    }
+    
     
     public static void options(String arg){
         //Debug print out inputted options.

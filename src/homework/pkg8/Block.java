@@ -8,8 +8,9 @@ package homework.pkg8;
 import java.util.Objects;
 
 /**
- *
- * @author Tyler
+ * Homework 8
+ * Authors: Tyler Allen, Brenden Arias
+ * Block.java
  */
 public class Block {
     
@@ -106,7 +107,7 @@ public class Block {
         if (this.w != other.w) {
             return false;
         }
-        if (!Objects.equals(this.c, other.c)) {
+        if (!this.c.equals(other.c)) {
             return false;
         }
         return true;

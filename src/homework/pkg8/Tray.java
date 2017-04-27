@@ -8,8 +8,9 @@ package homework.pkg8;
 import java.util.*;
 
 /**
- *
- * @author safar
+ * Homework 8
+ * Authors: Tyler Allen, Brenden Arias
+ * Tray.java
  */
 public class Tray {
     
@@ -27,8 +28,11 @@ public class Tray {
     public Tray(Tray oldTray){
         h = oldTray.h;
         w = oldTray.w;
-        blocks = oldTray.getBlocks();
-        lastMove = oldTray.prevMoves();
+        for (Block b: oldTray.blocks)
+            blocks.add(new Block(b));
+        if (oldTray.lastMove != null)
+            if (oldTray.lastMove.block != null)
+                lastMove = new Move(oldTray.lastMove);
     }
     
     //Reads through the given list of lines and converts
@@ -77,46 +81,49 @@ public class Tray {
                 returnMoves.add(new Move(b, new Coordinates(-1, 0)));
         }
         
+        if (this.lastMove.block != null)
+            for (Move m: returnMoves)
+                m.prevMove = new Move(this.lastMove);
+        
         return returnMoves;
     }
     
-    public void move(int key){
-        //TODO logic to move a block on the board
-        Block toMove = null;
-        int i = 0;
-        while (i < blocks.size() && toMove == null){
-            if (blocks.get(i).getKey() == key){
-                toMove = blocks.remove(i);
-            }
-            i++;
-        }
-    }
-    
-    public void move(Move move){
-        //TODO logic to move a block on the board
+    private void move(Move move){        
         boolean found = false;
         int i = 0;
-        while (i < blocks.size() && !found){
+        while (i < blocks.size() && !found){ //Check if the block exists
             if (blocks.get(i).equals(move.block)){
-                blocks.remove(i);
+                blocks.remove(i); //If so, remove it from the list
                 found = true;
             }
             i++;
         }
-        if (found){
-            move.block.place(new Coordinates(move.block.getX() + move.c.x, move.block.getY() + move.c.y));
-            this.placeBlock(move.block);
-            this.addMove(move);
+        if (found){ //If we've found the block, move it and place it
+            Block tempBlock = new Block(move.block);
+            tempBlock.place(new Coordinates(move.block.getX() + move.c.x, move.block.getY() + move.c.y));
+            this.placeBlock(tempBlock);
         }
         else
             System.out.println("Invalid move, no block found");
     }
     
     public void addMove(Move move){
-        if (this.lastMove != null)
-            move.prevMove = lastMove;
-        
-        lastMove = move;
+        if (move.block != null){ //If the move isn't valid
+            if (this.lastMove.block != null){ //If we already have a previous move
+                if (move.prevMove != null) //If the previous move has a previous move
+                    this.addMove(move.prevMove); //Then do that move first
+                Move tempMove = new Move(move); //Copy the new move
+                tempMove.prevMove = new Move(this.lastMove); //And set it as our last move
+                this.lastMove = tempMove; //Set our last move as this new one
+            }
+            else{ //If we don't have a previous move
+                if (move.prevMove != null) //If this move has a previous move
+                    this.addMove(move.prevMove); //Do that one first
+                this.lastMove = new Move(move); //Set our last move as this new move
+            }
+            
+            this.move(this.lastMove); //Execute the move action
+        }
     }
     
     public Move prevMoves(){return this.lastMove;}
@@ -213,9 +220,13 @@ public class Tray {
         if (this.w != other.w) {
             return false;
         }
-        if (!Objects.equals(this.blocks, other.blocks)) {
-            return false;
+        for (int i = 0; i < this.blocks.size(); i++){
+            if (!this.blocks.contains(other.blocks.get(i)))
+                return false;
+            if (!other.blocks.contains(this.blocks.get(i)))
+                return false;
         }
+        
         return true;
     }
     

@@ -6,8 +6,9 @@
 package homework.pkg8;
 
 /**
- *
- * @author safar
+ * Homework 8
+ * Authors: Tyler Allen, Brenden Arias
+ * Coordinates.java
  */
 public class Coordinates {
     public int x;
@@ -18,7 +19,7 @@ public class Coordinates {
         this.y = y;
     }
     
-        public Coordinates(Coordinates c){
+    public Coordinates(Coordinates c){
         this.x = c.x;
         this.y = c.y;
     }

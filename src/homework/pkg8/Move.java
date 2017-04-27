@@ -8,8 +8,9 @@ package homework.pkg8;
 import java.util.LinkedList;
 
 /**
- *
- * @author safar
+ * Homework 8
+ * Authors: Tyler Allen, Brenden Arias
+ * Move.java
  */
 public class Move {
     
@@ -24,6 +25,8 @@ public class Move {
     public Move(Move newMove){
         this.block = new Block(newMove.block);
         this.c = new Coordinates(newMove.c);
+        if (newMove.prevMove != null)
+            this.prevMove = new Move(newMove.prevMove);
     }
     public Move(){}
     
