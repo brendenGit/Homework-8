@@ -30,7 +30,7 @@ public class Solver {
         String noticeMessage = "Note: current solution method is inefficient for sufficiently "
                 + "large or difficult trays. Execution time on signifigantly difficult problems "
                 + "could be in excess of 30 mins.";
-        System.out.println(noticeMessage);
+        //System.out.println(noticeMessage);
                 
         LinkedList<String> fileNames = new LinkedList<>();
         
