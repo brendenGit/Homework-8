@@ -52,10 +52,11 @@ public class Coordinates {
     @Override
     public int hashCode() {
         int hash = 3;
-        hash = 53 * hash + this.x;
-        hash = 53 * hash + this.y;
+        hash = 23 * hash + this.x;
+        hash = 23 * hash + this.y;
         return hash;
     }
+    
 
     @Override
     public boolean equals(Object obj) {

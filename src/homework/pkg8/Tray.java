@@ -291,15 +291,20 @@ public class Tray {
     @Override
     public int hashCode() {
         int hash = 3;
-        int sum = 0;
-        hash = 17 * hash + this.h;
-        hash = 17 * hash + this.w;
+        int[] sum = new int[blocks.size()];
+        int i = 0;
+        hash = 23 * hash + this.h;
+        hash = 23 * hash + this.w;
         for (Block b: blocks){
-            sum += b.hashCode();
+            sum[i] = b.hashCode();
         }
-        hash = 17 * hash + sum;
+        Arrays.sort(sum);
+        for (Integer j: sum){
+            hash = 23 * hash + j;
+        }
         return hash;
     }
+    
 
     @Override
     public boolean equals(Object obj) {

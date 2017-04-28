@@ -130,11 +130,13 @@ public class Block {
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 67 * hash + this.h;
-        hash = 67 * hash + this.w;
-        hash = 67 * hash + Objects.hashCode(this.c);
+        hash = 17 * hash + this.h;
+        hash = 17 * hash + this.w;
+        hash = 17 * hash + this.c.x;
+        hash = 17 * hash + this.c.y;
         return hash;
     }
+    
 
     @Override
     public boolean equals(Object obj) {
