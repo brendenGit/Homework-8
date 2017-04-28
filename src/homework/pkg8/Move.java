@@ -14,22 +14,51 @@ import java.util.LinkedList;
  */
 public class Move {
     
+    /**
+     *
+     */
     public Block block;
+
+    /**
+     *
+     */
     public Coordinates c;
+
+    /**
+     *
+     */
     public Move prevMove = null;
     
+    /**
+     *
+     * @param block
+     * @param c
+     */
     public Move(Block block, Coordinates c){
         this.block = new Block(block);
         this.c = new Coordinates(c);
     }
+
+    /**
+     *
+     * @param newMove
+     */
     public Move(Move newMove){
         this.block = new Block(newMove.block);
         this.c = new Coordinates(newMove.c);
         if (newMove.prevMove != null)
             this.prevMove = new Move(newMove.prevMove);
     }
+
+    /**
+     *
+     */
     public Move(){}
     
+    /**
+     *
+     * @return
+     */
     public String print(){
         String toReturn = "";
         if (prevMove != null)
@@ -40,6 +69,10 @@ public class Move {
         return toReturn;
     }
     
+    /**
+     *
+     * @return
+     */
     public LinkedList<Move> getMoves(){
         LinkedList<Move> returnMoves = new LinkedList<>();
         if (this.prevMove != null)
@@ -50,6 +83,10 @@ public class Move {
         return returnMoves;
     }
     
+    /**
+     *
+     * @return
+     */
     public int size(){
         int i = 0;
         Move tempMove = this;

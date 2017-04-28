@@ -11,19 +11,39 @@ package homework.pkg8;
  * Coordinates.java
  */
 public class Coordinates {
+
+    /**
+     *
+     */
     public int x;
+
+    /**
+     *
+     */
     public int y;
     
+    /**
+     *
+     * @param x
+     * @param y
+     */
     public Coordinates(int x, int y){
         this.x = x;
         this.y = y;
     }
     
+    /**
+     *
+     * @param c
+     */
     public Coordinates(Coordinates c){
         this.x = c.x;
         this.y = c.y;
     }
     
+    /**
+     *
+     */
     public Coordinates(){
         this.x = 0;
         this.y = 0;
@@ -58,6 +78,10 @@ public class Coordinates {
         return true;
     }
     
+    /**
+     *
+     * @return
+     */
     public String print(){
         return this.y + " " + this.x;
     }

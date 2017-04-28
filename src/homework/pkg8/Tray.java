@@ -16,15 +16,22 @@ public class Tray {
     
     private int h; //Height
     private int w; //Width
-    private int currentKey = 0;
     private LinkedList<Block> blocks = new LinkedList<>();
     //List of all blocks on the tray.
     private Move lastMove = new Move();
 
+    /**
+     *
+     * @param lines
+     */
     public Tray(LinkedList<String> lines){
         buildTray(lines);
     }
     
+    /**
+     *
+     * @param oldTray
+     */
     public Tray(Tray oldTray){
         h = oldTray.h;
         w = oldTray.w;
@@ -53,31 +60,45 @@ public class Tray {
         }
     }
     
+    /**
+     *
+     * @return
+     */
     public int getH(){return this.h;}
+
+    /**
+     *
+     * @return
+     */
     public int getW(){return this.w;}
     
+    /**
+     *
+     * @return
+     */
     public LinkedList<Move> getMoves(){
         LinkedList<Move> returnMoves = new LinkedList<>();
         for (Block b: blocks){
             Block tempBlock = new Block(b);
             
+            //Adjust block position by 1. Check if it's a valid move.
             tempBlock.place(tempBlock.getX(), tempBlock.getY() + 1);
-            if (!this.blockCollision(tempBlock))
+            if (!this.blockCollision(tempBlock, b))
                 returnMoves.add(new Move(b, new Coordinates(0, 1)));
             
             tempBlock = new Block(b);
             tempBlock.place(tempBlock.getX(), tempBlock.getY() - 1);
-            if (!this.blockCollision(tempBlock))
+            if (!this.blockCollision(tempBlock, b))
                 returnMoves.add(new Move(b, new Coordinates(0, -1)));
             
             tempBlock = new Block(b);
             tempBlock.place(tempBlock.getX() + 1, tempBlock.getY());
-            if (!this.blockCollision(tempBlock))
+            if (!this.blockCollision(tempBlock, b))
                 returnMoves.add(new Move(b, new Coordinates(1, 0)));
             
             tempBlock = new Block(b);
             tempBlock.place(tempBlock.getX() - 1, tempBlock.getY());
-            if (!this.blockCollision(tempBlock))
+            if (!this.blockCollision(tempBlock, b))
                 returnMoves.add(new Move(b, new Coordinates(-1, 0)));
         }
         
@@ -107,6 +128,10 @@ public class Tray {
             System.out.println("Invalid move, no block found");
     }
     
+    /**
+     *
+     * @param move
+     */
     public void addMove(Move move){
         if (move.block != null){ //If the move isn't valid
             if (this.lastMove.block != null){ //If we already have a previous move
@@ -126,29 +151,75 @@ public class Tray {
         }
     }
     
+    /**
+     *
+     * @return
+     */
     public Move prevMoves(){return this.lastMove;}
     
     //Add a block to the board
+
+    /**
+     *
+     * @param newBlock
+     */
     public void placeBlock(Block newBlock){
         if (this.blockCollision(newBlock))
             return;
         
-        newBlock.setKey(currentKey++);
         blocks.add(new Block(newBlock));
     }
     
+    /**
+     *
+     * @param newBlock
+     * @return
+     */
     public Block removeBlock(Block newBlock){
         blocks.remove(newBlock);
         return newBlock;
     }
     
-    public Block removeBlock(int key){
-        for (int i = 0; i < blocks.size(); i++)
-            if (blocks.get(i).getKey() == key)
-                return blocks.remove(i);
-        return null;
+    /**
+     *
+     * @param key
+     * @return
+     */
+    public Block removeBlock(int i){
+        return blocks.remove(i);
     }
     
+    /**
+     *
+     * @param newBlock
+     * @param currentBlock
+     * @return
+     */
+    public boolean blockCollision(Block newBlock, Block currentBlock){
+        //Check if the block is outside the bounds of the board
+        if (newBlock.getX() + newBlock.w > this.w)
+            return true;
+        if (newBlock.getY() + newBlock.h > this.h)
+            return true;
+        if (newBlock.getX() < 0)
+            return true;
+        if (newBlock.getY() < 0)
+            return true;
+        
+        //Check if a block already occupies the space
+        for (Block b: blocks){
+            if (b.overlap(newBlock) && !b.equals(currentBlock))
+                return true;
+        }
+        
+        return false;
+    }
+    
+    /**
+     *
+     * @param newBlock
+     * @return
+     */
     public boolean blockCollision(Block newBlock){
         //Check if the block is outside the bounds of the board
         if (newBlock.getX() + newBlock.w > this.w)
@@ -169,24 +240,48 @@ public class Tray {
         return false;
     }
     
+    /**
+     *
+     * @return
+     */
     public LinkedList<Block> getBlocks(){
         return blocks;
     }
     
+    /**
+     *
+     * @param toAdd
+     */
     public void addBlocks(LinkedList<Block> toAdd){
         for (Block b: toAdd)
             placeBlock(b);
     }
 
     //Return if the board contains a particular block (solution)
+
+    /**
+     *
+     * @param newBlock
+     * @return
+     */
     public boolean contains(Block newBlock){
         return blocks.contains(newBlock);
     }
+
+    /**
+     *
+     * @param newBlocks
+     * @return
+     */
     public boolean contains(LinkedList<Block> newBlocks){
         return blocks.containsAll(newBlocks);
     }
     
     //Outputs the contents of the board
+
+    /**
+     *
+     */
     public void print(){
         System.out.println(this.h + " " + this.w);
         for (Block b: blocks)
@@ -196,9 +291,13 @@ public class Tray {
     @Override
     public int hashCode() {
         int hash = 3;
+        int sum = 0;
         hash = 17 * hash + this.h;
         hash = 17 * hash + this.w;
-        hash = 17 * hash + Objects.hashCode(this.blocks);
+        for (Block b: blocks){
+            sum += b.hashCode();
+        }
+        hash = 17 * hash + sum;
         return hash;
     }
 
