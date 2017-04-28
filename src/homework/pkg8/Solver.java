@@ -22,15 +22,16 @@ public class Solver {
      * If the program is given the -h option, it will output the available options
      * //LIST OTHER OPTIONS HERE
      * <p>
-     * If the program is able to find a solution, 
+     * If the program is able to find a solution, it will list the series of 
+     * moves necessary, otherwise it will exit.
      * @param args the command line arguments
-     * Run config: -option1 file1 file2
+     * Run example: solver -option1 file1 file2
+     * @see Solver
      */
     public static void main(String[] args) {
-        String noticeMessage = "Note: current solution method is inefficient for sufficiently "
-                + "large or difficult trays. Execution time on signifigantly difficult problems "
-                + "could be in excess of 30 mins.";
-        //System.out.println(noticeMessage);
+//        Note: current solution method is inefficient for sufficiently
+//              large or difficult trays. Execution time on signifigantly 
+//              difficult problems could be in excess of 30 mins.
                 
         LinkedList<String> fileNames = new LinkedList<>();
         
@@ -57,8 +58,6 @@ public class Solver {
         goal.print();
         System.out.println("---------------------\n");
         
-//        testing(tray, goal);
-        
         Move solutionMoves = solve(tray, goal);
         if (solutionMoves != null){
             System.out.println(solutionMoves.print());
@@ -68,18 +67,21 @@ public class Solver {
     }
     
     /**
-     *
-     * @param tray
-     * @param goal
-     * @return
+     * Returns a possible Move object that contains a series of moves that would
+     * solve the tray, if one exists. <p>
+     * This function takes in a tray containing the initial configuration and a
+     * tray containing the blocks that constitute a goal configuration.
+     * @param tray Initial tray configuration
+     * @param goal Tray containing the goal configuration
+     * @return A Move containing the moves required to reach the goal configuration
+     * @see Solver
      */
     public static Move solve(Tray tray, Tray goal){
         
         LinkedList<Move> moves = new LinkedList<>(); //List of all possible moves
-        LinkedList<Integer> prevTrays = new LinkedList<>(); //List of attempted trays
+        LinkedList<Tray> prevTrays = new LinkedList<>(); //List of attempted trays
 
-        Tray tempTray; //COULD REPLACE LIST OF MOVES WITH LIST OF TRAYS
-        
+        Tray tempTray;
         int count = 0;
         
         //Initialize the move list with the initial moves
@@ -90,85 +92,37 @@ public class Solver {
             tempTray = new Tray(tray); //Make a copy of the base tray
             tempTray.addMove(moves.pop()); //Move the tray with one of the possible moves
             if (!checkContains(prevTrays, tempTray)){ //If we've already tried this tray, ignore it
-                if (tempTray.contains(goal.getBlocks())){ //If it's the solution, return the move
-                    System.out.println("Attempts: " + count);
+                if (tempTray.contains(goal.getBlocks())) //If it's the solution, return the move
                     return tempTray.prevMoves();
-                }
                 else{
-                    prevTrays.add(tempTray.hashCode()); //Otherwise, add this to the attempt list
+                    prevTrays.add(new Tray(tempTray)); //Otherwise, add this to the attempt list
                     moves.addAll(tempTray.getMoves()); //And add it's moves to the stack
                 }
             }
         }
-        
-        //System.exit(1);
-        System.out.println("No solution Found");
-        System.out.println("Attempts: " + count);
+
+//        System.out.println("No solution Found");
         return null;
     }
     
     /**
-     *
-     * @param trays
-     * @param tray
-     * @return
+     * Returns a boolean value which is true if the list of trays contains the
+     * specified tray, or false if it does not.
+     * @param trays List of trays to be checked
+     * @param tray Tray to be checked for
+     * @return Whether or not the tray was found
      */
-    public static boolean checkContains(LinkedList<Integer> trays, Tray tray){
-        return trays.contains(tray.hashCode());
-    }
-    
-//    public static Move solve(Tray tray, Tray goal){
-//        
-//        LinkedList<Move> moves = new LinkedList<>(); //List of all possible moves
-//        LinkedList<Tray> prevTrays = new LinkedList<>(); //List of attempted trays
-//
-//        Tray tempTray;
-//        int count = 0;
-//        
-//        //Initialize the move list with the initial moves
-//        moves.addAll(tray.getMoves());
-//        
-//        while (!moves.isEmpty()){
-//            count++;
-//            tempTray = new Tray(tray); //Make a copy of the base tray
-//            tempTray.addMove(moves.pop()); //Move the tray with one of the possible moves
-//            if (!checkContains(prevTrays, tempTray)){ //If we've already tried this tray, ignore it
-//                if (tempTray.contains(goal.getBlocks())) //If it's the solution, return the move
-//                    return tempTray.prevMoves();
-//                else{
-//                    prevTrays.add(new Tray(tempTray)); //Otherwise, add this to the attempt list
-//                    moves.addAll(tempTray.getMoves()); //And add it's moves to the stack
-//                }
-//            }
-//        }
-//        
-//        //System.exit(1);
-//        System.out.println("No solution Found");
-//        return null;
-//    }
-//    
-//
-//    public static boolean checkContains(LinkedList<Tray> trays, Tray tray){
-//        for (Tray t: trays) //Check if tray is contained in list
-//            if (tray.equals(t))
-//                return true;
-//        
-//        return false;
-//    }
-    
-    public static void testing(Tray tray, Tray goal){
-        Tray tray2 = new Tray(tray);
-        int hash1 = tray.hashCode();
-        Block block1 = tray2.removeBlock(0);
-        LinkedList<Block> blocks = new LinkedList<>();
-        blocks.add(block1);
-        tray2.addBlocks(blocks);
-        int hash2 = tray2.hashCode();
+    public static boolean checkContains(LinkedList<Tray> trays, Tray tray){
+        for (Tray t: trays) //Check if tray is contained in list
+            if (tray.equals(t))
+                return true;
+        
+        return false;
     }
     
     /**
-     *
-     * @param arg
+     * Function for processing the options included at runtime
+     * @param arg List of options to be checked
      */
     public static void options(String arg){
         //Debug print out inputted options.
@@ -179,9 +133,10 @@ public class Solver {
     //Opens a file and returns the contents as a linked list.
 
     /**
-     *
+     * Opens a specified file and returns a list of strings representing that
+     * file.
      * @param fileName
-     * @return
+     * @return LinkedList of Strings representing the contents of the file.
      */
     public static LinkedList<String> openFile(String fileName){
         LinkedList<String> outList = new LinkedList<>();
