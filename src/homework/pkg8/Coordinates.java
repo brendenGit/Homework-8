@@ -6,22 +6,57 @@
 package homework.pkg8;
 
 /**
- *
- * @author safar
+ * Homework 8
+ * Authors: Tyler Allen, Brenden Arias
+ * Coordinates.java
  */
 public class Coordinates {
+
+    /**
+     *
+     */
     public int x;
+
+    /**
+     *
+     */
     public int y;
     
+    /**
+     *
+     * @param x
+     * @param y
+     */
     public Coordinates(int x, int y){
         this.x = x;
         this.y = y;
     }
     
+    /**
+     *
+     * @param c
+     */
+    public Coordinates(Coordinates c){
+        this.x = c.x;
+        this.y = c.y;
+    }
+    
+    /**
+     *
+     */
     public Coordinates(){
         this.x = 0;
         this.y = 0;
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 23 * hash + this.x;
+        hash = 23 * hash + this.y;
+        return hash;
+    }
+    
 
     @Override
     public boolean equals(Object obj) {
@@ -42,6 +77,14 @@ public class Coordinates {
             return false;
         }
         return true;
+    }
+    
+    /**
+     *
+     * @return
+     */
+    public String print(){
+        return this.y + " " + this.x;
     }
     
 }

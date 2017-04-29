@@ -5,15 +5,17 @@
  */
 package homework.pkg8;
 
+import java.util.Objects;
+
 /**
- *
- * @author Tyler
+ * Homework 8
+ * Authors: Tyler Allen, Brenden Arias
+ * Block.java
  */
 public class Block {
     
     final int h; //Height
     final int w; //Width
-    private int k; //key
     private Coordinates c; //Block position
     //All variables for a block
     //Not sure if block should store position
@@ -21,6 +23,14 @@ public class Block {
     //Also don't know if keys are necessary.
     
     //Constructor. Takes in height, width, and initial position
+
+    /**
+     *
+     * @param h
+     * @param w
+     * @param y
+     * @param x
+     */
     public Block(int h, int w, int y, int x){
         this.h = h;
         this.w = w;
@@ -29,52 +39,104 @@ public class Block {
         //k = 0;
     }
     
+    /**
+     *
+     * @param newBlock
+     */
     public Block(Block newBlock){
         this.h = newBlock.h;
         this.w = newBlock.w;
-        c = newBlock.getCoordinates();
+        c = new Coordinates(newBlock.getCoordinates());
         //this.k = newBlock.k;
     }
     
     //Change the position of the block
+
+    /**
+     *
+     * @param x
+     * @param y
+     */
     public void place(int x, int y){
         if (x >= 0) this.c.x = x;
         if (y >= 0) this.c.y = y;
     }
     
+    /**
+     *
+     * @param c
+     */
     public void place(Coordinates c){
         if (c.x < 0 || c.y < 0)
             return;
-        this.c = c;
+        this.c = new Coordinates(c);
     }
     
+    /**
+     *
+     * @return
+     */
     public int getX(){return this.c.x;}
+
+    /**
+     *
+     * @return
+     */
     public int getY(){return this.c.y;}
+
+    /**
+     *
+     * @return
+     */
     public Coordinates getCoordinates(){return this.c;}
-    public void setKey(int newKey){k = newKey;}
-    public int getKey(){return k;}
     
+    /**
+     *
+     * @param newBlock
+     * @return
+     */
     public boolean overlap(Block newBlock){
-        for (int i = newBlock.getX(); i < newBlock.getX() + newBlock.w; i++){
-            if (i >= this.getX() && i < this.getX() + this.w - 1){
-                for (int j = newBlock.getY(); i < newBlock.getY() + newBlock.h; i++){
-                    if (j >= this.getY() && j < this.getY() + this.h - 1){
-                        System.out.println("Overlap:");
-                        this.print();
-                        newBlock.print();
-                        System.out.println("--------");
-                        return true;
-                    }
-                }
+        for (int i = newBlock.getX(); i < (newBlock.getX() + newBlock.w); i++){
+            for (int j = newBlock.getY(); j < (newBlock.getY() + newBlock.h); j++){
+                if (this.contains(new Coordinates(i, j)))
+                    return true;
             }
         }
         
         return false;
     }
     
-    public void print(){
-        System.out.println(this.h + " " + this.w + " " + this.getY() + " " + this.getX());
+    /**
+     *
+     * @param newC
+     * @return
+     */
+    public boolean contains(Coordinates newC){
+        if ((newC.x >= this.getX()) && (newC.x <= this.getX() + this.w - 1))
+            if ((newC.y >= this.getY()) && (newC.y <= this.getY() + this.h - 1))
+                return true;
+        
+        return false;
     }
+    
+    /**
+     *
+     * @return
+     */
+    public String print(){
+        return this.h + " " + this.w + " " + this.getY() + " " + this.getX();
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 17 * hash + this.h;
+        hash = 17 * hash + this.w;
+        hash = 17 * hash + this.c.x;
+        hash = 17 * hash + this.c.y;
+        return hash;
+    }
+    
 
     @Override
     public boolean equals(Object obj) {
@@ -94,7 +156,7 @@ public class Block {
         if (this.w != other.w) {
             return false;
         }
-        if (this.c != other.c) {
+        if (!this.c.equals(other.c)) {
             return false;
         }
         return true;
