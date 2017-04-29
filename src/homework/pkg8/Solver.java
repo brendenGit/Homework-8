@@ -17,7 +17,7 @@ public class Solver {
     public static boolean[] ops = {false,false,false,false, false};
     public static long maxMem = 0;
     public static int totalTrays = 0;
-    //Options: h, runtime, memory usage, trays checked, movecount.
+    //Options: h, runtime, memory usage, trays checked, movecount
 
     /**
      * This program takes in a number of -options and two filenames containing

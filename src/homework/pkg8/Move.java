@@ -15,24 +15,24 @@ import java.util.LinkedList;
 public class Move {
     
     /**
-     *
+     * Block to be moved
      */
     public Block block;
 
     /**
-     *
+     * Amount to ALTER blocks position
      */
     public Coordinates c;
 
     /**
-     *
+     * Previously made move
      */
     public Move prevMove = null;
     
     /**
-     *
-     * @param block
-     * @param c
+     * Constructs a Move object given a block and coordinate.
+     * @param block Block to be moved
+     * @param c Amount to DISPLACE the block
      */
     public Move(Block block, Coordinates c){
         this.block = new Block(block);
@@ -40,8 +40,8 @@ public class Move {
     }
 
     /**
-     *
-     * @param newMove
+     * Constructs a copy of a given Move object.
+     * @param newMove Object to be copied
      */
     public Move(Move newMove){
         this.block = new Block(newMove.block);
@@ -49,29 +49,26 @@ public class Move {
         if (newMove.prevMove != null)
             this.prevMove = new Move(newMove.prevMove);
     }
-
-    /**
-     *
-     */
-    public Move(){}
     
     /**
-     *
-     * @return
+     * Returns a string containing the movement data.
+     * @return String representation of the move
      */
     public String print(){
         String toReturn = "";
         if (prevMove != null)
             toReturn += prevMove.print();
         if (this.block != null)
-            toReturn += (this.block.print() + " " + this.c.print() + "\n");
+            toReturn += (this.block.getCoordinates().print() + " "
+                    + (this.c.y + this.block.getCoordinates().y + " ")
+                    + (this.c.x + this.block.getX()) + "\n");
         
         return toReturn;
     }
     
     /**
-     *
-     * @return
+     * Returns all previous moves including this in order from oldest to newest
+     * @return List of previous moves
      */
     public LinkedList<Move> getMoves(){
         LinkedList<Move> returnMoves = new LinkedList<>();
@@ -84,8 +81,8 @@ public class Move {
     }
     
     /**
-     *
-     * @return
+     * Returns number of previous moves.
+     * @return Number of performed moves
      */
     public int size(){
         int i = 0;
