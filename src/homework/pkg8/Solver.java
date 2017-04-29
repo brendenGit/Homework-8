@@ -81,8 +81,8 @@ public class Solver {
         
         System.out.println(solutionMoves.print());
         
-        if (ops[1]) System.out.println("Elapsed Time: " + (stopTime = startTime));
-        if (ops[2]) System.out.println("Max Memory Used: " + maxMem);
+        if (ops[1]) System.out.println("Elapsed Time: " + (stopTime - startTime)/1000 + " Sec");
+        if (ops[2]) System.out.println("Max Memory Used: " + maxMem/1000000 + " MB");
         if (ops[3]) System.out.println("Total Trays Checked: " + totalTrays);
         if (ops[4]) System.out.println("Number of Moves: " + solutionMoves.size());
         
@@ -156,13 +156,13 @@ public class Solver {
         switch (arg){
             case "h": ops[0] = true;
                 break;
-            case "runtime": ops[1] = true;
+            case "oruntime": ops[1] = true;
                 break;
-            case "maxmemory": ops[2] = true;
+            case "omaxmemory": ops[2] = true;
                 break;
-            case "totaltrayschecked": ops[3] = true;
+            case "ototaltrayschecked": ops[3] = true;
                 break;
-            case "numberofmoves": ops[4] = true;
+            case "onumberofmoves": ops[4] = true;
                 break;
             
         }
