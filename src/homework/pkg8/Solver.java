@@ -13,6 +13,11 @@ import java.util.*;
  * Solver.java
  */
 public class Solver {
+    
+    public static boolean[] ops = {false,false,false,false, false};
+    public static long maxMem = 0;
+    public static int totalTrays = 0;
+    //Options: h, runtime, memory usage, trays checked, movecount
 
     /**
      * This program takes in a number of -options and two filenames containing
@@ -27,20 +32,31 @@ public class Solver {
      * @param args the command line arguments
      * Run example: solver -option1 file1 file2
      * @see Solver
+     * @see #options(java.lang.String) 
+     * @see #openFile(java.lang.String) 
      */
     public static void main(String[] args) {
 //        Note: current solution method is inefficient for sufficiently
 //              large or difficult trays. Execution time on signifigantly 
 //              difficult problems could be in excess of 30 mins.
-                
+
+        long startTime = System.currentTimeMillis();
         LinkedList<String> fileNames = new LinkedList<>();
         
         //Go through all args and filter out options from files
         for (String s: args){
             if (s.startsWith("-"))
-                options(s.substring(2));
+                options(s.substring(1).toLowerCase());
             else
                 fileNames.add(s);
+        }
+        
+        if (ops[0]){
+            System.out.println("Available options:\n-h: Will list available commands.\n"
+                    + "-oruntime: Will print the runtime of the code at completion.\n"
+                    + "-omaxmemory: Will print the max memory usage at completion.\n"
+                    + "-ototaltrayschecked: Will print the total trays checked at completion.\n"
+                    + "-onumberofmoves: Will print final move count.\n");
         }
         
         //If we don't have at least 2 files, exit
@@ -53,16 +69,22 @@ public class Solver {
         Tray goal = new Tray(solutionLines);
         
         System.out.println("Tray");
-        tray.print(); //Debug output tray and solution goal
+        System.out.println(tray.print()); //Debug output tray and solution goal
         System.out.println("\nGoal Configuration");
-        goal.print();
+        System.out.println(goal.print());
         System.out.println("---------------------\n");
         
         Move solutionMoves = solve(tray, goal);
-        if (solutionMoves != null){
-            System.out.println(solutionMoves.print());
-            System.out.println("Number of Moves: " + solutionMoves.size());
-        }
+        long stopTime = System.currentTimeMillis();
+        if (solutionMoves == null)
+            System.exit(1);
+        
+        System.out.println(solutionMoves.print());
+        
+        if (ops[1]) System.out.println("Elapsed Time: " + (stopTime = startTime));
+        if (ops[2]) System.out.println("Max Memory Used: " + maxMem);
+        if (ops[3]) System.out.println("Total Trays Checked: " + totalTrays);
+        if (ops[4]) System.out.println("Number of Moves: " + solutionMoves.size());
         
     }
     
@@ -74,7 +96,7 @@ public class Solver {
      * @param tray Initial tray configuration
      * @param goal Tray containing the goal configuration
      * @return A Move containing the moves required to reach the goal configuration
-     * @see Solver
+     * @see #checkContains(java.util.LinkedList, homework.pkg8.Tray) 
      */
     public static Move solve(Tray tray, Tray goal){
         
@@ -82,13 +104,12 @@ public class Solver {
         LinkedList<Tray> prevTrays = new LinkedList<>(); //List of attempted trays
 
         Tray tempTray;
-        int count = 0;
         
         //Initialize the move list with the initial moves
         moves.addAll(tray.getMoves());
         
         while (!moves.isEmpty()){
-            count++;
+            totalTrays++;
             tempTray = new Tray(tray); //Make a copy of the base tray
             tempTray.addMove(moves.pop()); //Move the tray with one of the possible moves
             if (!checkContains(prevTrays, tempTray)){ //If we've already tried this tray, ignore it
@@ -98,6 +119,13 @@ public class Solver {
                     prevTrays.add(new Tray(tempTray)); //Otherwise, add this to the attempt list
                     moves.addAll(tempTray.getMoves()); //And add it's moves to the stack
                 }
+            }
+            if (ops[2]){
+                Runtime runtime = Runtime.getRuntime();
+                runtime.gc();
+                long memoryUsed = runtime.totalMemory() - runtime.freeMemory();
+                if (memoryUsed > maxMem)
+                    maxMem = memoryUsed;
             }
         }
 
@@ -111,6 +139,7 @@ public class Solver {
      * @param trays List of trays to be checked
      * @param tray Tray to be checked for
      * @return Whether or not the tray was found
+     * @see #solve(homework.pkg8.Tray, homework.pkg8.Tray) 
      */
     public static boolean checkContains(LinkedList<Tray> trays, Tray tray){
         for (Tray t: trays) //Check if tray is contained in list
@@ -125,6 +154,19 @@ public class Solver {
      * @param arg List of options to be checked
      */
     public static void options(String arg){
+        switch (arg){
+            case "h": ops[0] = true;
+                break;
+            case "runtime": ops[1] = true;
+                break;
+            case "maxmemory": ops[2] = true;
+                break;
+            case "totaltrayschecked": ops[3] = true;
+                break;
+            case "numberofmoves": ops[4] = true;
+                break;
+            
+        }
         //Debug print out inputted options.
         //TODO add logic for outputting options.
         System.out.println( "-option " + arg);
@@ -135,7 +177,7 @@ public class Solver {
     /**
      * Opens a specified file and returns a list of strings representing that
      * file.
-     * @param fileName
+     * @param fileName File to be read
      * @return LinkedList of Strings representing the contents of the file.
      */
     public static LinkedList<String> openFile(String fileName){

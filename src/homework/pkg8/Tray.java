@@ -18,19 +18,20 @@ public class Tray {
     private int w; //Width
     private LinkedList<Block> blocks = new LinkedList<>();
     //List of all blocks on the tray.
-    private Move lastMove = new Move();
+    private Move lastMove = null;
 
     /**
-     *
-     * @param lines
+     * Builds Tray object based on a list of lines.
+     * @param lines List of lines containing tray data
+     * @see #buildTray(java.util.LinkedList) 
      */
     public Tray(LinkedList<String> lines){
         buildTray(lines);
     }
     
     /**
-     *
-     * @param oldTray
+     * Builds a Tray object based on a previous tray object.
+     * @param oldTray Object to copy data from
      */
     public Tray(Tray oldTray){
         h = oldTray.h;
@@ -42,8 +43,11 @@ public class Tray {
                 lastMove = new Move(oldTray.lastMove);
     }
     
-    //Reads through the given list of lines and converts
-    //into blocks and dimensions.
+    /**
+     * Takes in a list of lines in order to construct a tray object.
+     * @param lines List of lines containing tray data
+     * @see #placeBlock(homework.pkg8.Block) 
+     */
     private void buildTray(LinkedList<String> lines){
         
         String firstLine = lines.pop();
@@ -61,20 +65,21 @@ public class Tray {
     }
     
     /**
-     *
-     * @return
+     * Returns height of Tray
+     * @return Height
      */
     public int getH(){return this.h;}
 
     /**
-     *
-     * @return
+     * Returns width of Tray
+     * @return Width
      */
     public int getW(){return this.w;}
     
     /**
-     *
-     * @return
+     * Returns a list of possible movements.
+     * @return List of available moves
+     * @see #blockCollision(homework.pkg8.Block, homework.pkg8.Block) 
      */
     public LinkedList<Move> getMoves(){
         LinkedList<Move> returnMoves = new LinkedList<>();
@@ -102,11 +107,34 @@ public class Tray {
                 returnMoves.add(new Move(b, new Coordinates(-1, 0)));
         }
         
-        if (this.lastMove.block != null)
+        if (this.lastMove != null)
             for (Move m: returnMoves)
                 m.prevMove = new Move(this.lastMove);
         
         return returnMoves;
+    }
+    
+    /**
+     * Preform a move action using a provided movement
+     * @param move A move to be performed
+     */
+    public void addMove(Move move){
+        if (move.block != null){ //If the move isn't valid
+            if (this.lastMove != null){ //If we already have a previous move
+                if (move.prevMove != null) //If the previous move has a previous move
+                    this.addMove(move.prevMove); //Then do that move first
+                Move tempMove = new Move(move); //Copy the new move
+                tempMove.prevMove = new Move(this.lastMove); //And set it as our last move
+                this.lastMove = tempMove; //Set our last move as this new one
+            }
+            else{ //If we don't have a previous move
+                if (move.prevMove != null) //If this move has a previous move
+                    this.addMove(move.prevMove); //Do that one first
+                this.lastMove = new Move(move); //Set our last move as this new move
+            }
+            
+            this.move(this.lastMove); //Execute the move action
+        }
     }
     
     private void move(Move move){        
@@ -129,39 +157,15 @@ public class Tray {
     }
     
     /**
-     *
-     * @param move
-     */
-    public void addMove(Move move){
-        if (move.block != null){ //If the move isn't valid
-            if (this.lastMove.block != null){ //If we already have a previous move
-                if (move.prevMove != null) //If the previous move has a previous move
-                    this.addMove(move.prevMove); //Then do that move first
-                Move tempMove = new Move(move); //Copy the new move
-                tempMove.prevMove = new Move(this.lastMove); //And set it as our last move
-                this.lastMove = tempMove; //Set our last move as this new one
-            }
-            else{ //If we don't have a previous move
-                if (move.prevMove != null) //If this move has a previous move
-                    this.addMove(move.prevMove); //Do that one first
-                this.lastMove = new Move(move); //Set our last move as this new move
-            }
-            
-            this.move(this.lastMove); //Execute the move action
-        }
-    }
-    
-    /**
-     *
-     * @return
+     * Returns a list of movements that have been made on this tray.
+     * @return List of performed moves
      */
     public Move prevMoves(){return this.lastMove;}
     
-    //Add a block to the board
-
     /**
-     *
-     * @param newBlock
+     * Places a block on the tray if it is a valid block. Does nothing if it 
+     * would create an invalid board.
+     * @param newBlock A new block to be placed on the tray
      */
     public void placeBlock(Block newBlock){
         if (this.blockCollision(newBlock))
@@ -171,31 +175,16 @@ public class Tray {
     }
     
     /**
-     *
-     * @param newBlock
-     * @return
+     * Removes a block from the tray and returns it.
+     * @param newBlock Block to be removed
+     * @return Block removed
      */
     public Block removeBlock(Block newBlock){
         blocks.remove(newBlock);
         return newBlock;
     }
     
-    /**
-     *
-     * @param key
-     * @return
-     */
-    public Block removeBlock(int i){
-        return blocks.remove(i);
-    }
-    
-    /**
-     *
-     * @param newBlock
-     * @param currentBlock
-     * @return
-     */
-    public boolean blockCollision(Block newBlock, Block currentBlock){
+    private boolean blockCollision(Block newBlock, Block currentBlock){
         //Check if the block is outside the bounds of the board
         if (newBlock.getX() + newBlock.w > this.w)
             return true;
@@ -215,12 +204,7 @@ public class Tray {
         return false;
     }
     
-    /**
-     *
-     * @param newBlock
-     * @return
-     */
-    public boolean blockCollision(Block newBlock){
+    private boolean blockCollision(Block newBlock){
         //Check if the block is outside the bounds of the board
         if (newBlock.getX() + newBlock.w > this.w)
             return true;
@@ -241,51 +225,55 @@ public class Tray {
     }
     
     /**
-     *
-     * @return
+     * Returns a list of blocks on the tray
+     * @return List of stored blocks
      */
     public LinkedList<Block> getBlocks(){
         return blocks;
     }
     
     /**
-     *
-     * @param toAdd
-     */
-    public void addBlocks(LinkedList<Block> toAdd){
-        for (Block b: toAdd)
-            placeBlock(b);
-    }
-
-    //Return if the board contains a particular block (solution)
-
-    /**
-     *
-     * @param newBlock
-     * @return
+     * Check if the tray contains a given block
+     * @param newBlock Block to check for
+     * @return If the tray contains the given block
      */
     public boolean contains(Block newBlock){
         return blocks.contains(newBlock);
     }
 
     /**
-     *
-     * @param newBlocks
-     * @return
+     * Checks if the tray contains multiple blocks from a list
+     * @param newBlocks Blocks to be checked for
+     * @return If the tray contains the given blocks
+     * @see #contains(homework.pkg8.Block) 
      */
     public boolean contains(LinkedList<Block> newBlocks){
         return blocks.containsAll(newBlocks);
     }
     
-    //Outputs the contents of the board
-
     /**
-     *
+     * Returns a string containing the contents of the board
+     * @return String containing the tray data
      */
-    public void print(){
-        System.out.println(this.h + " " + this.w);
+    public String print(){
+        String toReturn;
+        toReturn = this.h + " " + this.w + "\n";
         for (Block b: blocks)
-            System.out.println(b.print());
+            toReturn += b.print() + "\n";
+        
+        return toReturn;
+    }
+    
+    /**
+     * Checks if the tray contains a valid configuration of blocks
+     * @return If tray is OK
+     */
+    public boolean isOK(){
+        for (Block b: blocks)
+            if (this.blockCollision(b, b))
+                return true;
+        
+        return false;
     }
 
     @Override
@@ -304,7 +292,6 @@ public class Tray {
         }
         return hash;
     }
-    
 
     @Override
     public boolean equals(Object obj) {

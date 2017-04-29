@@ -13,19 +13,19 @@ package homework.pkg8;
 public class Coordinates {
 
     /**
-     *
+     * X coordinate (column)
      */
     public int x;
 
     /**
-     *
+     * Y coordinate (row)
      */
     public int y;
     
     /**
-     *
-     * @param x
-     * @param y
+     * Constructs a Coordinates object at the given location
+     * @param x X position (column)
+     * @param y Y position (row)
      */
     public Coordinates(int x, int y){
         this.x = x;
@@ -33,8 +33,8 @@ public class Coordinates {
     }
     
     /**
-     *
-     * @param c
+     * Constructs a copy of another Coordinates object
+     * @param c Coordinate to be copied
      */
     public Coordinates(Coordinates c){
         this.x = c.x;
@@ -42,7 +42,7 @@ public class Coordinates {
     }
     
     /**
-     *
+     * Default constructor (0,0)
      */
     public Coordinates(){
         this.x = 0;
@@ -56,7 +56,6 @@ public class Coordinates {
         hash = 23 * hash + this.y;
         return hash;
     }
-    
 
     @Override
     public boolean equals(Object obj) {
@@ -80,8 +79,8 @@ public class Coordinates {
     }
     
     /**
-     *
-     * @return
+     * Returns a string representation of this coordinate.
+     * @return String representation of Coordinate object
      */
     public String print(){
         return this.y + " " + this.x;
