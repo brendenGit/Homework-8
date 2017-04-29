@@ -122,7 +122,6 @@ public class Solver {
             }
             if (ops[2]){
                 Runtime runtime = Runtime.getRuntime();
-                runtime.gc();
                 long memoryUsed = runtime.totalMemory() - runtime.freeMemory();
                 if (memoryUsed > maxMem)
                     maxMem = memoryUsed;
