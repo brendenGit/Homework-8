@@ -57,6 +57,7 @@ public class Solver {
                     + "-omaxmemory: Will print the max memory usage at completion.\n"
                     + "-ototaltrayschecked: Will print the total trays checked at completion.\n"
                     + "-onumberofmoves: Will print final move count.\n");
+            System.exit(0);
         }
         
         //If we don't have at least 2 files, exit
@@ -81,7 +82,7 @@ public class Solver {
         
         System.out.println(solutionMoves.print());
         
-        if (ops[1]) System.out.println("Elapsed Time: " + (stopTime - startTime)/1000 + " Sec");
+        if (ops[1]) System.out.println("Elapsed Time: " + (stopTime - startTime)/1000 + " Seconds");
         if (ops[2]) System.out.println("Max Memory Used: " + maxMem/1000000 + " MB");
         if (ops[3]) System.out.println("Total Trays Checked: " + totalTrays);
         if (ops[4]) System.out.println("Number of Moves: " + solutionMoves.size());
